@@ -3,4 +3,5 @@ Unlocks the Cave Monkey in the upgrade menu. Predecessor to the much better All 
 
 ## Information
 Release date: 9/30/2020
+
 Status: Broken

@@ -3,4 +3,5 @@ Similar to Mastery Mode in BTD5. Bloons are up one rank (for rounds 1-100, at le
 
 ## Information
 Release date: 8/15/2020
+
 Status: Broken
