@@ -6,6 +6,6 @@ If you don't know what it is, in Speed Battles:
 - Bloons are unlocked 2 rounds earlier
 
 ## Information
-Release date: 1/24/2022
+Last updated: 1/25/2022
 
 Status: Working
