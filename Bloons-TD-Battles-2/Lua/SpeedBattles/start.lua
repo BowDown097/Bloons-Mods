@@ -1,6 +1,6 @@
 mod_metadata("name", "Speed Battles")
 mod_metadata("author", "BowDown097")
-mod_metadata("version", "1.0.0")
+mod_metadata("version", "1.0.1")
 
 local function patch_bloonsets(data)
     for i = 2, #data do
