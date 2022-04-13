@@ -1,76 +1,104 @@
 ﻿using Assets.Main.Scenes;
 using Assets.Scripts.Unity;
-using Assets.Scripts.Unity.UI_New.Popups;
-using Harmony;
-using Il2CppSystem.Collections.Generic;
+using HarmonyLib;
 using MelonLoader;
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
+using Assets.Scripts.Data.Music;
+using static BetterJukebox.Mod;
 using UnityEngine;
+using Assets.Scripts.Data;
+using NinjaKiwi.Common;
+using NLayer;
+using System.Runtime.Serialization.Formatters.Binary;
+using Newtonsoft.Json.Linq;
+using BTD_Mod_Helper;
+using BTD_Mod_Helper.Api.ModOptions;
+#pragma warning disable SYSLIB0011
 
-namespace BetterJukebox
+[assembly: MelonInfo(typeof(BetterJukebox.Mod),"Better Jukebox","1.0.2","BowDown097 & Silentstorm")]
+[assembly: MelonGame("Ninja Kiwi","BloonsTD6")]
+namespace BetterJukebox;
+public class Mod : BloonsTD6Mod
 {
-    public class Mod : MelonMod 
+    public static readonly List<AudioClip> clips = new();
+    private static readonly ModSettingBool enableCache = new(false)
     {
-        // forgive me allah that i have to do this
-        public static List<string> clipNames = new List<string>();
-        public static List<string> clipLocs = new List<string>();
-    }
+        displayName = "Enable Track Caching"
+    };
 
-    [HarmonyPatch(typeof(AudioJukeBox), "Init")]
-    public class AudioJukeBox_Patch
+    public override void OnApplicationStart()
     {
-        [HarmonyPostfix]
-        public static void Postfix(AudioJukeBox __instance)
+        string jukeboxFolder = Path.Combine(MelonHandler.ModsDirectory, "Jukebox");
+        if (!Directory.Exists(jukeboxFolder))
+            Directory.CreateDirectory(jukeboxFolder);
+
+        foreach (string mp3 in Directory.GetFiles(jukeboxFolder))
         {
-            // unlock every track, i hate NK for making the jukebox system horrible
-            for (int i = 0; i < __instance.purchasedTracks.Count; i++)
+            try
             {
-                __instance.purchasedTracks[i] = true;
-            }
-        }
-    }
+                string samplesFile = mp3.Replace("mp3", "samples");
+                string infoFile = mp3.Replace("mp3", "mpeginfo");
+                string filename = Path.GetFileNameWithoutExtension(new FileInfo(mp3).Name);
+                BinaryFormatter fmt = new();
 
-    [HarmonyPatch(typeof(MusicLocalizationManager), "Init")]
-    public class MusicLoc_Patch
-    {
-        [HarmonyPostfix]
-        public static void Postfix(MusicLocalizationManager __instance)
-        {
-            // have to update localization manager manually too, my face when
-            if (__instance.locDictionary.ContainsKey(Mod.clipNames[0])) return;
-
-            for (int i = 0; i < Mod.clipNames.Count; i++)
-            {
-                __instance.locDictionary.Add(Mod.clipNames[i], Mod.clipLocs[i]);
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(TitleScreen), "UpdateVersion")]
-    public class TitleScreen_Patch
-    {
-        [HarmonyPostfix]
-        public static void Postfix(TitleScreen __instance)
-        {
-            Action<int> loadTracksAction = new Action<int>(delegate (int i)
-            {
-                foreach (string mp3 in Directory.GetFiles("Jukebox", "*.mp3", SearchOption.AllDirectories))
+                if (File.Exists(samplesFile) && File.Exists(infoFile) && enableCache)
                 {
-                    string clipName = Path.GetFileNameWithoutExtension(mp3);
-                    AudioClip clip = AudioUtils.AudioClipFromMP3(mp3, clipName, true);
-                    Mod.clipNames.Add(clipName);
-                    Mod.clipLocs.Add("JukeboxMusicCustom" + clipName);
-                    AudioUtils.AddAudioClipToJukebox(Game.instance.jukeBoxTracks, clip, clipName);
+                    MelonLogger.Msg($"Reading from cache for {filename}");
+                    using FileStream fs = new(samplesFile, FileMode.Open);
+                    float[] fsSamples = (float[])fmt.Deserialize(fs);
+                    JObject mpegInfo = JObject.Parse(File.ReadAllText(infoFile));
+                    int channels = mpegInfo["channels"]?.Value<int>() ?? 0;
+                    int sampleRate = mpegInfo["sampleRate"]?.Value<int>() ?? 0;
+                    AudioClip fsClip = AudioClip.Create(filename, fsSamples.Length / 2, channels, sampleRate, false);
+                    fsClip.SetData(fsSamples, 1);
+                    clips.Add(fsClip);
+                    return;
                 }
-            });
 
-            Directory.CreateDirectory("Jukebox");
-            PopupScreen.instance.ShowSetValuePopup("Give me your MP3s!",
-                "Place MP3 files that you want to add to the jukebox into the newly created 'Jukebox' folder in the BTD6 directory, then click 'OK.' " +
-                "The game will likely have a lag spike, but don't worry, it won't crash. However, if the number below is not 0, be afraid. Something bad might happen.", 
-                loadTracksAction, Marshal.GetLastWin32Error());
+                MelonLogger.Msg($"Reading directly for {filename}");
+                using MpegFile mpegFile = new(mp3);
+                float[] samples = new float[mpegFile.Length / mpegFile.Channels / 2];
+                mpegFile.ReadSamples(samples, 0, samples.Length);
+                AudioClip clip = AudioClip.Create(filename, samples.Length / 2, mpegFile.Channels, mpegFile.SampleRate, false);
+                clip.SetData(samples, 1);
+                clips.Add(clip);
+
+                if (enableCache)
+                {
+                    using FileStream samplesOut = new(samplesFile, FileMode.Create);
+                    fmt.Serialize(samplesOut, samples);
+                    JObject infoOut = new(new JProperty("channels", mpegFile.Channels), new JProperty("sampleRate", mpegFile.SampleRate));
+                    File.WriteAllText(infoFile, infoOut.ToString());
+                }
+            }
+            catch (Exception exception)
+            {
+                MelonLogger.Error(exception.Message);
+            }
+        }
+    }
+}
+
+[HarmonyPatch(typeof(TitleScreen),"OnPlayButtonClicked")]
+public static class TitleScreenOnPlayButtonClicked_Patch
+{
+    [HarmonyPostfix]
+    public static void Postfix()
+    {
+        foreach (AudioClip clip in clips)
+        {
+            Game.instance.audioFactory.RegisterAudioClip(clip.name, clip);
+            LocalizationManager.Instance.textTable.Add(clip.name, clip.name);
+            LocalizationManager.Instance.defaultTable.Add(clip.name, clip.name);
+            MusicItem musicItem = new()
+            {
+                name = clip.name,
+                freeTrack = true,
+                Clip = clip,
+                hideFlags = 0,
+                id = clip.name,
+                locKey = clip.name
+            };
+            GameData.Instance.audioJukeBox.musicTrackData.Add(musicItem);
         }
     }
 }
