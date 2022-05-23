@@ -1,0 +1,11 @@
+{
+    "authors": [
+        "BowDown097"
+    ],
+    "description": "Towers shoot REALLY fast.",
+    "name": "Hypersonic Towers",
+    "scripts": [
+        "main.js"
+    ],
+    "version": "1.0.0"
+}

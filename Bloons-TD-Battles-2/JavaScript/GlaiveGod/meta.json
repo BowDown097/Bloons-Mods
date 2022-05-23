@@ -1,0 +1,11 @@
+{
+    "authors": [
+        "BowDown097"
+    ],
+    "description": "Why have a Glaive Lord when you could have a Glaive God?",
+    "name": "Glaive God",
+    "scripts": [
+        "main.js"
+    ],
+    "version": "1.0.0"
+}
