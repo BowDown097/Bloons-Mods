@@ -1,0 +1,12 @@
+{
+    "authors": [
+        "2MuchDiscord",
+        "BowDown097"
+    ],
+    "description": "Instantly unlocks camo, regrow, and fortified bloonsends.",
+    "name": "Instant Modifiers",
+    "scripts": [
+        "main.js"
+    ],
+    "version": "1.0.0"
+}
