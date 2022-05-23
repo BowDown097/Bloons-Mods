@@ -1,0 +1,12 @@
+{
+    "authors": [
+        "BowDown097",
+        "Greenphx"
+    ],
+    "description": "Replicates the Bananza mode from Battles 1.",
+    "name": "Bananza",
+    "scripts": [
+        "main.js"
+    ],
+    "version": "1.0.0"
+}
