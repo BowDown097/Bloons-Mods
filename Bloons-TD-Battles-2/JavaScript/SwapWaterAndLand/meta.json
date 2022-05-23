@@ -1,0 +1,12 @@
+{
+    "authors": [
+        "BowDown097",
+        "Magic_Gonads"
+    ],
+    "description": "Land towers can now only be placed on water, water towers can now only be placed on land.",
+    "name": "Swap Water and Land",
+    "scripts": [
+        "main.js"
+    ],
+    "version": "1.0.0"
+}
