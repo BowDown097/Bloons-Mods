@@ -1,0 +1,12 @@
+{
+    "authors": [
+        "BowDown097",
+        "Vadmeme"
+    ],
+    "description": "The Dartling Gunner becomes a 3-round burst.",
+    "name": "Triple Gunner",
+    "scripts": [
+        "main.js"
+    ],
+    "version": "1.0.0"
+}
