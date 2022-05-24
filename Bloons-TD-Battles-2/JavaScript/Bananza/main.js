@@ -27,6 +27,6 @@ function patchGameRules(data) {
     return { successful: true, data: data };
 }
 
-souped.registerCsvPatcher(patchBloonsets, "bloon_sets.bloonset");
-souped.registerJsonPatcher(patchFarm, "banana_farm.tower_blueprint");
-souped.registerJsonPatcher(patchGameRules, "*.gamerules");
+souped.registerCsvPatcher("*", "bloon_sets.bloonset", patchBloonsets);
+souped.registerJsonPatcher("*", "banana_farm.tower_blueprint", patchFarm);
+souped.registerJsonPatcher("*", "*.gamerules", patchGameRules);

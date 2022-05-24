@@ -14,5 +14,5 @@ function patchTowerBlueprint(data) {
     return { successful: true, data: data };
 }
 
-souped.registerJsonPatcher(patchTowerBlueprint, "*.tower_blueprint");
-souped.registerJsonPatcher(patchTowerBlueprint, "*.hero_blueprint");
+souped.registerJsonPatcher("*", "*.tower_blueprint", patchTowerBlueprint);
+souped.registerJsonPatcher("*", "*.hero_blueprint", patchTowerBlueprint);

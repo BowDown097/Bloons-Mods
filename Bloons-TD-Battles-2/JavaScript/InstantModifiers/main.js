@@ -5,4 +5,4 @@ function patchGameRules(data) {
     return { successful: true, data: data };
 }
 
-souped.registerJsonPatcher(patchGameRules, "*.gamerules");
+souped.registerJsonPatcher("*", "*.gamerules", patchGameRules);

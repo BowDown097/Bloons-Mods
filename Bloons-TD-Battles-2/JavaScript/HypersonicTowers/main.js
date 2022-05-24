@@ -8,4 +8,4 @@ function patch(data) {
     return { successful: true, data: data };
 }
 
-souped.registerJsonPatcher(patch, "*.tower_blueprint");
+souped.registerJsonPatcher("*", "*.tower_blueprint", patch);

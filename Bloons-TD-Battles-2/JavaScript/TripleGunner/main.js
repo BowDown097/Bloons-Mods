@@ -4,4 +4,4 @@ function patchDartling(data) {
     return { successful: true, data: data };
 }
 
-souped.registerJsonPatcher(patchDartling, "dartling_gunner.tower_blueprint");
+souped.registerJsonPatcher("*", "dartling_gunner.tower_blueprint", patchDartling);

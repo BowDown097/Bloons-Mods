@@ -4,6 +4,7 @@
         "BowDown097"
     ],
     "description": "Instantly unlocks camo, regrow, and fortified bloonsends.",
+    "modid": "instantmodifiers",
     "name": "Instant Modifiers",
     "scripts": [
         "main.js"

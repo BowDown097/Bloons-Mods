@@ -3,6 +3,7 @@
         "BowDown097"
     ],
     "description": "Towers shoot REALLY fast.",
+    "modid": "hypersonic",
     "name": "Hypersonic Towers",
     "scripts": [
         "main.js"

@@ -3,6 +3,7 @@
         "BowDown097"
     ],
     "description": "Replicates the Speed Battles mode from Battles 1.",
+    "modid": "speedbattles",
     "name": "Speed Battles",
     "scripts": [
         "main.js"

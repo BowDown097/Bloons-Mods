@@ -37,7 +37,7 @@ function patchGameRules(data) {
     return { successful: true, data: data };
 }
 
-souped.registerCsvPatcher(patchBloonsets, "bloon_sets.bloonset");
-souped.registerCsvPatcher(patchLoadouts, "bloon_set_loadouts.bloonset_loadouts");
-souped.registerJsonPatcher(patchComponents, "bloon_components.scene");
-souped.registerJsonPatcher(patchGameRules, "*.gamerules");
+souped.registerCsvPatcher("*", "bloon_sets.bloonset", patchBloonsets);
+souped.registerCsvPatcher("*", "bloon_set_loadouts.bloonset_loadouts", patchLoadouts);
+souped.registerJsonPatcher("*", "bloon_components.scene", patchComponents);
+souped.registerJsonPatcher("*", "*.gamerules", patchGameRules);

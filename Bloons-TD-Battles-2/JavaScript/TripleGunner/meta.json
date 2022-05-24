@@ -4,6 +4,7 @@
         "Vadmeme"
     ],
     "description": "The Dartling Gunner becomes a 3-round burst.",
+    "modid": "triplegunner",
     "name": "Triple Gunner",
     "scripts": [
         "main.js"

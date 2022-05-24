@@ -3,6 +3,7 @@
         "BowDown097"
     ],
     "description": "Why have a Glaive Lord when you could have a Glaive God?",
+    "modid": "glaivegod",
     "name": "Glaive God",
     "scripts": [
         "main.js"

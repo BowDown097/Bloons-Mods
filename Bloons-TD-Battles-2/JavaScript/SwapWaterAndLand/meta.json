@@ -4,6 +4,7 @@
         "Magic_Gonads"
     ],
     "description": "Land towers can now only be placed on water, water towers can now only be placed on land.",
+    "modid": "swap",
     "name": "Swap Water and Land",
     "scripts": [
         "main.js"

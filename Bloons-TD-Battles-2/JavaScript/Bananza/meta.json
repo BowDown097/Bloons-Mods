@@ -4,6 +4,7 @@
         "Greenphx"
     ],
     "description": "Replicates the Bananza mode from Battles 1.",
+    "modid": "bananza",
     "name": "Bananza",
     "scripts": [
         "main.js"

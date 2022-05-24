@@ -11,4 +11,4 @@ function patch(data) {
     return { successful: true, data: data };
 }
 
-souped.registerJsonPatcher(patch, "boomerang_monkey.tower_blueprint");
+souped.registerJsonPatcher("*", "boomerang_monkey.tower_blueprint", patch);
